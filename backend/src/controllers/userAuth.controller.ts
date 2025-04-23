@@ -5,7 +5,13 @@ import asyncHandler from '../utils/asyncHandler';
 
 
 // Sign Up
+// export const signUp = ( res:any) => {
+//     console.log("Simple controller working");
+//     return res.send("Ok");
+//   };
+  
 export const signUp = asyncHandler(async (req, res, next) => {
+    console.log("in userController")
     const { username, email, password} = req.body;
     console.log(req.body);
 
@@ -55,38 +61,38 @@ export const signUp = asyncHandler(async (req, res, next) => {
 });
 
 // log In
-export const logIN = asyncHandler(async (req, res, next) => {
-    const { email, password } = req.body;
+// export const logIN = asyncHandler(async (req, res, next) => {
+//     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
-        return next(new ApiError(401, 'Invalid email or password'));
-    }
+//     const user = await User.findOne({ email });
+//     if (!user || !(await user.matchPassword(password))) {
+//         return next(new ApiError(401, 'Invalid email or password'));
+//     }
 
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+//     const accessToken = user.generateAccessToken();
+//     const refreshToken = user.generateRefreshToken();
 
-    if (!accessToken || !refreshToken) {
-        return next(new ApiError(500, "Failed to generate tokens"));
-    }
+//     if (!accessToken || !refreshToken) {
+//         return next(new ApiError(500, "Failed to generate tokens"));
+//     }
 
-    user.accessToken = accessToken;
-    await user.save({ validateBeforeSave: false });
+//     user.accessToken = accessToken;
+//     await user.save({ validateBeforeSave: false });
 
-    const options = {
-        httpOnly: true,
-        secure: true
-    };
+//     const options = {
+//         httpOnly: true,
+//         secure: true
+//     };
 
-    res.cookie("accessToken", accessToken, options);
-    res.cookie("refreshToken", refreshToken, options);
+//     res.cookie("accessToken", accessToken, options);
+//     res.cookie("refreshToken", refreshToken, options);
 
-    res.status(200).json({
-        success: true,
-        data: user,
-        message: "User logged in successfully"
-    });
-});
+//     res.status(200).json({
+//         success: true,
+//         data: user,
+//         message: "User logged in successfully"
+//     });
+// });
 
 // Sign Out
 // export const signOut = asyncHandler(async (req, res, next) => {

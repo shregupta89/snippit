@@ -12,14 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logIN = exports.signUp = void 0;
+exports.signUp = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
 const apiError_1 = __importDefault(require("../utils/apiError"));
 const apiResponse_1 = __importDefault(require("../utils/apiResponse"));
 const asyncHandler_1 = __importDefault(require("../utils/asyncHandler"));
-// import '../types/express'; // Ensure the extended Request type is loaded
 // Sign Up
+// export const signUp = ( res:any) => {
+//     console.log("Simple controller working");
+//     return res.send("Ok");
+//   };
 exports.signUp = (0, asyncHandler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("in userController");
     const { username, email, password } = req.body;
     console.log(req.body);
     if (!username || !email || !password) {
@@ -54,31 +58,31 @@ exports.signUp = (0, asyncHandler_1.default)((req, res, next) => __awaiter(void 
     return res.status(201).json(new apiResponse_1.default(200, { isUser, accessToken, refreshToken }, "User created successfully"));
 }));
 // log In
-exports.logIN = (0, asyncHandler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
-    const user = yield user_model_1.default.findOne({ email });
-    if (!user || !(yield user.matchPassword(password))) {
-        return next(new apiError_1.default(401, 'Invalid email or password'));
-    }
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
-    if (!accessToken || !refreshToken) {
-        return next(new apiError_1.default(500, "Failed to generate tokens"));
-    }
-    user.accessToken = accessToken;
-    yield user.save({ validateBeforeSave: false });
-    const options = {
-        httpOnly: true,
-        secure: true
-    };
-    res.cookie("accessToken", accessToken, options);
-    res.cookie("refreshToken", refreshToken, options);
-    res.status(200).json({
-        success: true,
-        data: user,
-        message: "User logged in successfully"
-    });
-}));
+// export const logIN = asyncHandler(async (req, res, next) => {
+//     const { email, password } = req.body;
+//     const user = await User.findOne({ email });
+//     if (!user || !(await user.matchPassword(password))) {
+//         return next(new ApiError(401, 'Invalid email or password'));
+//     }
+//     const accessToken = user.generateAccessToken();
+//     const refreshToken = user.generateRefreshToken();
+//     if (!accessToken || !refreshToken) {
+//         return next(new ApiError(500, "Failed to generate tokens"));
+//     }
+//     user.accessToken = accessToken;
+//     await user.save({ validateBeforeSave: false });
+//     const options = {
+//         httpOnly: true,
+//         secure: true
+//     };
+//     res.cookie("accessToken", accessToken, options);
+//     res.cookie("refreshToken", refreshToken, options);
+//     res.status(200).json({
+//         success: true,
+//         data: user,
+//         message: "User logged in successfully"
+//     });
+// });
 // Sign Out
 // export const signOut = asyncHandler(async (req, res, next) => {
 //     await User.findByIdAndUpdate(
